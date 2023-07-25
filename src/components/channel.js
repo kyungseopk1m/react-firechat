@@ -20,17 +20,52 @@ const Channel = ({ id = null }) => {
   // 채팅 메세지 생성시 useState로 새로운 메세지 저장
   const [newMessage, setNewMessage] = useState("");
 
-  // input 필드 포커싱과 하단 스크롤을 위한 useRef
+  // 포커싱과 하단 스크롤을 위한 useRef
   const inputRef = useRef();
   const bottomListRef = useRef();
 
   // 채팅 작성했을 때 onChanghandler, onSubmitHandler
   const handleOnChange = (e) => {
-    // 추후에 내용 작성
+    setNewMessage(e.target.value);
   }
 
   const handleOnSubmit = async (e) => {
-    // 추후에 내용 작성
+    e.preventDefault();
+    // 입력한 채팅 공백 제거
+    const trimmedMessage = newMessage.trim();
+    if (trimmedMessage) {
+      // Add new message in Firestore
+      messagesRef.add({
+        text: trimmedMessage,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        uid: currentUser?.id,
+        displayName: currentUser?.name,
+        photoURL: currentUser?.image,
+        isRead: false,
+      });
+
+      // Clear input field
+      setNewMessage("");
+      // Scroll down to the bottom of the list
+      bottomListRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+    
+    // 그 외, useRef 활용한 모션들
+    useEffect(() => {
+      if (inputRef.current) {
+        // 인풋 포커싱
+        inputRef.current.focus();
+      }
+    }, [inputRef]);
+    
+    // 첫 화면 하단 스크롤
+    useEffect(() => {
+      if (bottomListRef.current) {
+        bottomListRef.current.scrollIntoView({ behavior: "smooth" });
+      }
+      // messagesRef 업데이트가 될 때마다 읽음/안읽음 표시 업데이트 할 수 있음.
+
+    }, [messagesRef]);
   }
 
 
