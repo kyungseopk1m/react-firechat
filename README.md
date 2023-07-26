@@ -5,6 +5,7 @@ CSS. Deployed on Netlify.
 
 Watch the tutorial on how to build this app from scratch:
 
+[[Build a REALTIME CHAT APP in 5 MIN with React and Firebase]](https://www.youtube.com/watch?v=2-LISBTczQE)
 
 ## create-react-app
 
